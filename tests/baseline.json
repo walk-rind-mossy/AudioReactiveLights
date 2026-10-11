@@ -1,0 +1,12 @@
+{
+ "frames": 160,
+ "events": 47,
+ "counts": {
+  "DOMINANT NOTE CHANGE": 2,
+  "TRANSIENT": 16,
+  "BASS IMPACT": 16,
+  "RHYTHMIC EVENT": 13
+ },
+ "featuresHash": "a8f99651629f",
+ "eventsHash": "99ca875375f7"
+}

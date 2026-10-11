@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MUSIC MAP LAB · LIGHT LAB</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="drop-overlay" id="dropOverlay"><div class="drop-overlay-card"><strong>Drop audio anywhere</strong><span>Release to load the track into MUSIC MAP LAB</span></div></div>
+<div class="app">
+<header class="topbar">
+  <div class="brand">MUSIC MAP LAB</div><div class="sub">analysis workbench</div>
+  <div class="song" id="songName">No song loaded</div><div class="topgrow"></div>
+  <button id="openBtn" class="ui-btn">Open</button><input id="fileInput" class="fileinput" type="file" accept="audio/*"/>
+  <div class="dropzone" id="dropZone">Drop audio</div>
+  <div class="transport"><button id="restartBtn" class="ui-btn" title="Restart">↺</button><button id="playBtn" class="ui-btn" title="Play / pause · Space">▶</button><button id="loopBtn" class="ui-btn">Loop: off</button><input id="volume" class="ui-range ui-range-sm" type="range" min="0" max="1" step=".01" value=".9" title="Volume"><div class="readout"><span id="timeNow">00:00.000</span> / <span id="duration">00:00.000</span></div></div>
+</header>
+<div class="workspace">
+  <div class="map-title">
+    <div class="title">SYNCHRONIZED MUSICAL MAP</div>
+    <div class="ui-badge" id="statusChip">waiting for audio</div>
+    <div class="topgrow"></div>
+    <div class="map-purpose">live timeline · synchronized feature tracks</div>
+  </div>
+  <div class="timeline-toolbar">
+    <div class="group zoom-group"><span class="label">Timeline</span><input id="zoomRange" class="ui-range ui-range-lg" type="range" min=".25" max="8" step=".25" value="1" aria-label="Timeline zoom"><button id="fitBtn" class="ui-btn">Fit</button><span class="value" id="zoomValue">100%</span></div>
+    <div class="group"><span class="label">Auto-follow</span><button id="followBtn" class="ui-btn" title="Automatically scroll the map to keep the playhead visible while playing.">On</button><span class="ui-info" data-tip="When enabled, playback keeps the moving playhead in view. Moving the map manually pauses auto-follow until you turn it on again.">i</span></div>
+    <div class="group"><span class="label">Baseline window</span><input id="calibrationToolbar" class="ui-range ui-range-md" type="range" min="0" max="15" step=".5" value="5" title="First N seconds used as this track's reference context for relative values."><input id="calibrationNumber" class="ui-input toolbar-number" type="text" inputmode="decimal" value="5" aria-label="Baseline window in seconds"><span class="value" id="calibrationValue">5.0 s</span><span class="ui-info" data-tip="The first N seconds form the reference baseline used by relative values. Changing it recalculates relative signals across the map.">i</span></div>
+    <div class="group"><button id="fitHeightBtn" class="ui-btn" title="Collapse or expand every analysis row">Expand all</button></div>
+    <div class="spacer"></div>
+    <div class="toolbar-hint">Space: play / pause · Auto-follow keeps playhead visible · Baseline sets the relative reference · Debug explains the signal pipeline</div>
+    <button id="debugMode" class="ui-btn" title="Show raw/processed values, thresholds, smoothing, normalization and derived-signal contributors in the Inspector."><span id="debugLabel">Debug details: off</span></button>
+  </div>
+  <div class="body">
+    
+<section class="sign-preview-panel" id="signPreviewPanel">
+  <div class="sign-preview-head">
+    <strong>PHYSICAL SIGN PREVIEW</strong>
+    <span class="ui-badge">LIGHT LAB</span>
+    <span class="hint">Music Map drives light behavior · fixed geometry · face color = glow color</span>
+    <div class="sign-preview-state"><span id="signDriveState">MAP OFF</span><span class="toggle-dot on" id="signReadyDot"></span></div>
+  </div>
+  <div class="sign-preview-stage" id="signPreviewStage">
+    <div class="sign-preview-wall" id="signWall"></div>
+    <div class="sign-backlight" id="signBacklight"></div>
+    <svg id="signSvg" class="sign-svg" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 5693.6 460">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="signMain" class="sign-main">
+    <path d="M2576.27,232.28l-14.54-50.68-3.01.86c-18.89,5.42-42.52,12.13-68,18.31-7.18-34.57-25.71-67.73-56.57-92.95-41.48-34.53-104.28-42.05-152.72-18.28-89.64,43.97-72.87,182.06,86.66,182.06,22.29,0,45.63-2.3,68.76-5.92-5.57,19.88-17.3,37.74-36.01,50.02-43.19,28.33-112.24,17.53-189.44-29.64l-27.49,44.99c184.13,112.5,296.01,27.02,308.99-76.45,30.14-7.04,58.01-15.04,80.39-21.46l3-.86ZM2279.86,169.82c.07-38.24,74.69-59.33,120.81-21.25,19.18,15.63,32.11,38.75,37.37,63.37-75.2,13.21-149.67,12.68-158.19-42.12Z" class="sign-main sign-part" />
+    <path d="M2433.98,107.7c.05.04.1.09.16.13.02.02.04.03.06.05l-.22-.18Z" class="sign-main sign-part" />
+    <polygon points="2550.96 76.05 2526.19 122.59 2639.57 182.94 2576.14 302.19 2622.68 326.95 2710.87 161.17 2550.96 76.05" class="sign-main sign-part" />
+  </g>
+  <g id="signArrowRight" class="sign-arrow-right">
+    <path d="M3938.98,404.99c-44.05,0-86.57-1.48-128.07-4.43-87.31-6.22-170.22-19.02-253.48-39.13-152.99-36.96-292.36-93.99-481.39-180.01l9.94-21.84c342.07,155.65,581.51,247.79,1021.41,214.78,111.91-8.39,206.43-34.48,273.34-75.44,11.01-6.74,21.2-13.86,30.51-21.27-41.8-21.14-71.23-46.27-87.8-75.08-9.9-17.32-14.21-34.57-12.84-51.3,1.27-15.47,7.52-29.93,18.08-41.82,26.11-29.41,72.33-38.1,112.43-21.16,42.28,17.41,64.13,55.9,57.05,100.47-3.56,22.37-14.4,45.66-31.36,67.36-3.86,4.94-8.03,9.8-12.48,14.56,7.63,3.02,15.6,5.95,23.92,8.78,60.07,20.42,136.86,35.29,228.24,44.22,166.16,16.23,343.66,9.05,438.26-4.49,250.83-36.98,400.21-135.37,555.37-282.2l-.08,32.93c-82.67,76.46-154.74,129.78-230.21,170.67-95.06,51.5-197.26,84.02-321.62,102.35-96.03,13.74-275.91,21.05-444.04,4.62-93.21-9.11-171.82-24.38-233.63-45.38-12.4-4.21-24.11-8.66-35.12-13.34-12.46,10.79-26.53,21-42.14,30.55-70.15,42.94-168.38,70.22-284.07,78.9-59.66,4.47-116.08,6.71-170.21,6.71ZM4399.15,103.81c-20.51,0-40.08,7.55-52.53,21.57-15.56,17.52-16.4,40.7-2.37,65.25,15.32,26.63,44.3,50.02,86.42,69.84,24.39-24.01,39.74-50.09,43.78-75.48,5.33-33.52-10.56-61.38-42.52-74.52l-.11-.05c-10.53-4.46-21.74-6.61-32.67-6.61Z" class="sign-arrow-right sign-part" />
+    <polygon points="3048.61 220.99 3019.29 142.23 3097.98 112.94 3106.35 135.43 3050.16 156.35 3071.1 212.62 3048.61 220.99" class="sign-arrow-right sign-part" />
+  </g>
+  <g id="signArrowLeft" class="sign-arrow-left">
+    <path d="M711.64,389.41c-1.21,0-2.4,0-3.61-.03-103.68-1.64-167.86-61.94-229.93-120.26-41.88-39.35-81.43-76.51-132.16-96.48-99.01-38.96-215.32-.75-345.87,113.57l-.04-31.54c52.13-43.54,102.94-75.65,151.38-95.64,73.04-30.14,141.45-33.07,203.31-8.73,55.02,21.65,98.12,62.15,139.8,101.32,61.44,57.73,119.48,112.26,213.87,113.75,92.44,1.42,196.06-57.95,305.76-120.79,122.43-70.14,249.03-142.67,374.56-138.53,85.25,2.97,152.87,20.63,212.81,55.55,53.01,30.88,91.96,70.44,133.19,112.31,16.72,16.98,34,34.53,52.3,51.45l-16.29,17.62c-18.72-17.3-36.2-35.06-53.11-52.23-78.24-79.47-152.15-154.53-329.71-160.72-118.68-3.91-242.29,66.9-361.82,135.37-111.26,63.74-216.45,123.99-314.45,124Z" class="sign-arrow-left sign-part" />
+    <polygon points="1745.54 383.87 1743.79 359.93 1805.32 355.44 1801.1 297.35 1825.04 295.61 1831 377.62 1745.54 383.87" class="sign-arrow-left sign-part" />
+  </g>
+  <polygon points="4086.51 148.82 4108.92 152.77 4112.87 130.37 4136.99 134.62 4133.04 157.03 4155.45 160.98 4151.19 185.1 4128.79 181.15 4124.84 203.56 4100.71 199.3 4104.66 176.9 4082.26 172.95 4086.51 148.82" class="sign-accent" id="signAccent0" />
+  <polygon points="3801.99 113.31 3820.54 126.48 3833.71 107.93 3853.69 122.11 3840.52 140.66 3859.07 153.83 3844.88 173.81 3826.33 160.64 3813.16 179.19 3793.19 165 3806.36 146.45 3787.81 133.28 3801.99 113.31" class="sign-accent" id="signAccent1" />
+  <path d="M4005.59,310.93c-45.89,19.94-96.16-17.27-90.49-66.99l29.81,3.4c-3.06,26.77,24.01,46.81,48.72,36.07l11.96,27.51Z" class="sign-accent" id="signAccent2" />
+  <path d="M3538.42,257.97c-6.83-49.57,42.56-87.94,88.9-69.08l-11.31,27.79c-24.95-10.16-51.55,10.5-47.87,37.19l-29.72,4.1Z" class="sign-accent" id="signAccent3" />
+  <polygon points="4412.53 374.54 4433.13 364.88 4423.47 344.29 4445.65 333.88 4455.31 354.48 4475.91 344.82 4486.31 367.01 4465.71 376.67 4475.37 397.26 4453.19 407.66 4443.53 387.07 4422.93 396.72 4412.53 374.54" class="sign-accent" id="signAccent4" />
+  <path d="M3032.33,337.74c33.64-37.04,94.77-23.76,110.02,23.89l-28.57,9.14c-8.21-25.66-41.12-32.81-59.24-12.87l-22.21-20.17Z" class="sign-accent" id="signAccent5" />
+  <polygon points="4584.25 122.26 4606.66 126.21 4610.61 103.81 4634.74 108.06 4630.79 130.47 4653.19 134.42 4648.94 158.54 4626.53 154.59 4622.58 177 4598.45 172.74 4602.4 150.34 4580 146.39 4584.25 122.26" class="sign-accent" id="signAccent6" />
+  <polygon points="5217.02 164 5239.43 167.95 5243.38 145.54 5267.5 149.8 5263.55 172.2 5285.96 176.15 5281.7 200.28 5259.3 196.33 5255.35 218.73 5231.22 214.48 5235.17 192.07 5212.77 188.12 5217.02 164" class="sign-accent" id="signAccent7" />
+  <polygon points="4800.57 197.64 4822.98 201.59 4826.93 179.19 4851.06 183.44 4847.11 205.85 4869.51 209.8 4865.26 233.92 4842.85 229.97 4838.9 252.38 4814.77 248.12 4818.72 225.72 4796.32 221.77 4800.57 197.64" class="sign-accent" id="signAccent8" />
+  <path d="M5494.06,128.95c-43.21,25.23-97.53-5.79-97.77-55.82l30-.14c.13,26.94,29.38,43.64,52.64,30.06l15.12,25.91Z" class="sign-accent" id="signAccent9" />
+  <path d="M4974.11,153.47c8.69-49.28,67.46-70.67,105.79-38.51l-19.28,22.98c-20.64-17.32-52.29-5.8-56.97,20.73l-29.54-5.21Z" class="sign-accent" id="signAccent10" />
+  <polygon points="3329.71 133.13 3352.4 131.38 3350.65 108.7 3375.08 106.82 3376.82 129.5 3399.51 127.76 3401.39 152.18 3378.7 153.93 3380.45 176.61 3356.02 178.49 3354.28 155.81 3331.59 157.56 3329.71 133.13" class="sign-accent" id="signAccent11" />
+  <path d="M5443.51,334.18c41.53-27.91,97.7-.39,101.1,49.53l-29.93,2.04c-1.83-26.88-32.08-41.7-54.44-26.67l-16.73-24.9Z" class="sign-accent" id="signAccent12" />
+  <polygon points="496.99 81.29 514.83 95.41 528.95 77.57 548.16 92.77 534.04 110.61 551.88 124.73 536.67 143.94 518.83 129.82 504.71 147.66 485.5 132.45 499.62 114.62 481.78 100.5 496.99 81.29" class="sign-accent" id="signAccent13" />
+  <polygon points="223.5 299.58 238.23 316.92 255.57 302.19 271.43 320.87 254.09 335.59 268.82 352.93 250.15 368.79 235.42 351.46 218.08 366.18 202.22 347.51 219.56 332.78 204.83 315.45 223.5 299.58" class="sign-accent" id="signAccent14" />
+  <path d="M47.79,122.31c-1.08-50.03,52.39-82.46,96.26-58.39l-14.43,26.3c-23.62-12.96-52.41,4.5-51.83,31.44l-29.99.65Z" class="sign-accent" id="signAccent15" />
+  <path d="M1700.41,142.84c8.69-49.28,67.46-70.67,105.79-38.51l-19.28,22.98c-20.64-17.32-52.29-5.8-56.97,20.73l-29.54-5.21Z" class="sign-accent" id="signAccent16" />
+  <path d="M756.48,261.19c-32.31,38.21-93.86,27.12-110.8-19.96l28.23-10.16c9.12,25.35,42.27,31.32,59.66,10.75l22.91,19.37Z" class="sign-accent" id="signAccent17" />
+  <polygon points="803.98 113.91 826.68 115.43 828.2 92.73 852.65 94.37 851.13 117.07 873.83 118.59 872.19 143.03 849.49 141.51 847.97 164.21 823.53 162.58 825.05 139.88 802.35 138.36 803.98 113.91" class="sign-accent" id="signAccent18" />
+  <polygon points="1468.11 239.51 1490.52 243.46 1494.47 221.06 1518.59 225.31 1514.64 247.72 1537.05 251.67 1532.79 275.79 1510.39 271.84 1506.44 294.25 1482.31 289.99 1486.26 267.59 1463.86 263.64 1468.11 239.51" class="sign-accent" id="signAccent19" />
+  <polygon points="1071.22 341.03 1090.94 329.68 1079.6 309.96 1100.83 297.74 1112.18 317.46 1131.9 306.12 1144.12 327.35 1124.4 338.7 1135.74 358.42 1114.51 370.63 1103.16 350.92 1083.44 362.26 1071.22 341.03" class="sign-accent" id="signAccent20" />
+  <path d="M1134.87,120.19c-45.13,21.61-96.73-13.73-92.89-63.62l29.91,2.31c-2.07,26.86,25.72,45.89,50.02,34.26l12.96,27.06Z" class="sign-accent" id="signAccent21" />
+  <path d="M1326.24,321.82c43.96-23.91,97.31,8.74,96.03,58.76l-29.99-.76c.69-26.93-28.04-44.51-51.71-31.64l-14.33-26.35Z" class="sign-accent" id="signAccent22" />
+  <polygon points="1958.74 183.36 1981.15 187.31 1985.1 164.9 2009.23 169.16 2005.27 191.56 2027.68 195.51 2023.42 219.64 2001.02 215.69 1997.07 238.09 1972.94 233.84 1976.89 211.44 1954.49 207.49 1958.74 183.36" class="sign-accent" id="signAccent23" />
+  <polygon points="2817.66 249.91 2840.06 253.86 2844.01 231.45 2868.14 235.71 2864.19 258.11 2886.6 262.06 2882.34 286.19 2859.94 282.24 2855.99 304.64 2831.86 300.39 2835.81 277.98 2813.4 274.03 2817.66 249.91" class="sign-accent" id="signAccent24" />
+</svg>
+    <div class="sign-preview-readout">
+      <span class="sign-chip">MAIN <b id="signMainVal">0.60</b></span>
+      <span class="sign-chip">BACKLIGHT <b id="signBackVal">0.02</b></span>
+      <span class="sign-chip">ARROWS <b id="signArrowVal">0.05</b></span>
+      <span class="sign-chip">ACCENT <b id="signAccentVal">0.00</b></span>
+      <span class="sign-chip">BASS <b id="signBassVal">0.00</b></span>
+      <span class="sign-chip">DROP <b id="signDropVal">0.00</b></span>
+      <span class="sign-chip">NOTE <b id="signNoteVal">—</b></span>
+    </div>
+  </div>
+</section>
+
+      <div class="analysis-scroll" id="analysisScroll" aria-label="Unified analysis timeline"><div class="fallback-timeline" aria-hidden="true"><div class="fallback-header"><div>VARIABLES</div><div class="fallback-ruler">TIMELINE</div></div><div class="fallback-light-head"><div>LIGHT VARIABLES</div><div class="fallback-ruler">LIGHT OUTPUT TIMELINE</div></div><div class="fallback-row light"><div class="fallback-control"><span class="fallback-dot"></span><strong>MAIN LIGHT</strong><span class="fallback-muted">awaiting audio</span></div><div class="fallback-chart"><span class="fallback-line"></span><span class="fallback-grid"></span></div></div><div class="fallback-row light"><div class="fallback-control"><span class="fallback-dot"></span><strong>BACKLIGHT</strong><span class="fallback-muted">awaiting audio</span></div><div class="fallback-chart"><span class="fallback-line"></span><span class="fallback-grid"></span></div></div><div class="fallback-row light"><div class="fallback-control"><span class="fallback-dot"></span><strong>ARROWS L / R</strong><span class="fallback-muted">awaiting audio</span></div><div class="fallback-chart"><span class="fallback-line"></span><span class="fallback-grid"></span></div></div><div class="fallback-row light"><div class="fallback-control"><span class="fallback-dot"></span><strong>ACCENT LIGHT</strong><span class="fallback-muted">awaiting audio</span></div><div class="fallback-chart"><span class="fallback-line"></span><span class="fallback-grid"></span></div></div><div class="fallback-row light"><div class="fallback-control"><span class="fallback-dot"></span><strong>DROP IMPACT</strong><span class="fallback-muted">awaiting audio</span></div><div class="fallback-chart"><span class="fallback-line"></span><span class="fallback-grid"></span></div></div><div class="fallback-row light"><div class="fallback-control"><span class="fallback-dot"></span><strong>LIGHT COLOR</strong><span class="fallback-muted">awaiting audio</span></div><div class="fallback-chart"><span class="fallback-line"></span><span class="fallback-grid"></span></div></div><div class="fallback-row waveform"><div class="fallback-control"><span class="fallback-dot on"></span><strong>WAVEFORM</strong><span class="fallback-muted">source waveform</span></div><div class="fallback-chart waveform-skeleton"><div></div></div></div><div class="fallback-row"><div class="fallback-control"><span class="fallback-dot on"></span><strong>OVERALL ENERGY</strong><span class="fallback-muted">waiting for audio analysis</span></div><div class="fallback-chart"><span class="fallback-grid"></span><span class="fallback-line"></span></div></div><div class="fallback-row"><div class="fallback-control"><span class="fallback-dot on"></span><strong>BASS BODY + IMPACT</strong><span class="fallback-muted">waiting for audio analysis</span></div><div class="fallback-chart"><span class="fallback-grid"></span><span class="fallback-line"></span></div></div><div class="fallback-row"><div class="fallback-control"><span class="fallback-dot on"></span><strong>ACTIVITY / FLUX</strong><span class="fallback-muted">waiting for audio analysis</span></div><div class="fallback-chart"><span class="fallback-grid"></span><span class="fallback-line"></span></div></div><div class="fallback-row"><div class="fallback-control"><span class="fallback-dot on"></span><strong>TRANSIENT EVENTS</strong><span class="fallback-muted">waiting for audio analysis</span></div><div class="fallback-chart"><span class="fallback-grid"></span><span class="fallback-line"></span></div></div><div class="fallback-row"><div class="fallback-control"><span class="fallback-dot on"></span><strong>RHYTHMIC EVENTS</strong><span class="fallback-muted">waiting for audio analysis</span></div><div class="fallback-chart"><span class="fallback-grid"></span><span class="fallback-line"></span></div></div><div class="fallback-row"><div class="fallback-control"><span class="fallback-dot on"></span><strong>BASS IMPACT EVENTS</strong><span class="fallback-muted">waiting for audio analysis</span></div><div class="fallback-chart"><span class="fallback-grid"></span><span class="fallback-line"></span></div></div><div class="fallback-row"><div class="fallback-control"><span class="fallback-dot on"></span><strong>SPECTRAL CHARACTER</strong><span class="fallback-muted">waiting for audio analysis</span></div><div class="fallback-chart"><span class="fallback-grid"></span><span class="fallback-line"></span></div></div><div class="fallback-row"><div class="fallback-control"><span class="fallback-dot on"></span><strong>CHROMA / DOMINANT NOTE</strong><span class="fallback-muted">waiting for audio analysis</span></div><div class="fallback-chart"><span class="fallback-grid"></span><span class="fallback-line"></span></div></div><div class="fallback-row"><div class="fallback-control"><span class="fallback-dot on"></span><strong>CHAOS / IRREGULARITY</strong><span class="fallback-muted">waiting for audio analysis</span></div><div class="fallback-chart"><span class="fallback-grid"></span><span class="fallback-line"></span></div></div><div class="fallback-row"><div class="fallback-control"><span class="fallback-dot on"></span><strong>DROP / STRUCTURAL IMPACT</strong><span class="fallback-muted">waiting for audio analysis</span></div><div class="fallback-chart"><span class="fallback-grid"></span><span class="fallback-line"></span></div></div></div></div>
+    <aside class="right-inspector" id="inspector">
+      <div class="inspector-sticky">
+        <div class="section inspector-top">
+          <div class="inspector-kicker">INSPECTOR</div>
+          <div class="bigtime" id="inspectorTime">00:00.000</div>
+          <div class="inspector-sub">Select a track or event marker to inspect how the signal is built.</div>
+        </div>
+        <div class="section live-state-section">
+          <div class="section-title-row"><h3>Live State</h3><span class="ui-badge">SYNC</span></div>
+          <div class="live-state-grid" id="liveState">
+            <div><span>TIME</span><b data-live-state="time">00:00.000</b></div>
+            <div><span>ENERGY</span><b data-live-state="energy">—</b></div>
+            <div><span>BASS</span><b data-live-state="bass">—</b></div>
+            <div><span>ACTIVITY</span><b data-live-state="activity">—</b></div>
+            <div><span>CHAOS</span><b data-live-state="chaos">—</b></div>
+            <div><span>DROP</span><b data-live-state="drop">—</b></div>
+            <div><span>NOTE</span><b data-live-state="note">—</b></div>
+            <div><span>CONF</span><b data-live-state="confidence">—</b></div>
+          </div>
+          <div class="spectral-live" id="spectralLive">
+            <div class="spectral-live-title">SPECTRAL CHARACTER</div>
+            <div class="spectral-live-grid">
+              <div><span>CENTROID</span><b data-spectral-live="centroid">—</b></div>
+              <div><span>FLATNESS</span><b data-spectral-live="flatness">—</b></div>
+              <div><span>BANDWIDTH</span><b data-spectral-live="bandwidth">—</b></div>
+              <div><span>ROLLOFF</span><b data-spectral-live="rolloff">—</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="section" id="selectedSection">
+          <div class="section-title-row"><h3 id="selectedTitle">Selected Track</h3><span class="ui-badge" id="selectedLive">LIVE</span></div>
+          <div class="inspector-card" id="selectedCard"><div class="muted">No track selected.</div></div>
+        </div>
+        <div class="section" id="lightOutputTraceSection">
+          <div class="section-title-row"><h3>Light Output Trace</h3><span class="ui-badge">MAP</span></div>
+          <div class="inspector-card" id="lightOutputInspector"><div class="muted">No light output selected. Click a pinned light variable to inspect its trace.</div></div>
+        </div>
+        <div class="section" id="eventSection">
+          <div class="section-title-row"><h3>Event Inspector</h3><button id="clearEventBtn" class="ui-btn ui-btn-icon" title="Clear event selection">×</button></div>
+          <div id="currentEventCard" class="notice">No event selected.</div>
+          <div class="event-browser" id="eventBrowser"></div>
+        </div>
+        <div class="section" id="analysisValidation">
+          <div class="section-title-row"><h3>Analysis Validation</h3><span class="ui-badge">SEMANTIC</span></div>
+          <div class="validation-list">
+            <div><b>BASS BODY</b><span>Sustained low-frequency weight; slow envelope.</span></div>
+            <div><b>BASS IMPACT</b><span>Short low-frequency rise vs local baseline; refractory peaks.</span></div>
+            <div><b>TRANSIENT</b><span>General short-term spectral change; not automatically a beat.</span></div>
+            <div><b>RHYTHMIC EVENT</b><span>Transient candidate that fits recent recurring timing.</span></div>
+            <div><b>CHAOS</b><span>Irregularity from variability, timing, density and spectral instability.</span></div>
+            <div><b>DROP</b><span>Buildup plus structural change and impact; one event per refractory period.</span></div>
+            <div><b>DOMINANT NOTE</b><span>Normalized chroma with smoothing, persistence and hysteresis.</span></div>
+          </div>
+        </div>
+        
+<div class="section" id="signLabSection">
+  <div class="section-title-row"><h3>Light / Music Link</h3><span class="ui-badge">OUTPUT</span></div>
+  <div class="sign-controls">
+    <div class="sign-section">
+      <div class="sign-toggle-row"><span class="debug-copy">Drive sign from Music Map</span><button id="signDriveToggle" class="ui-btn sign-toggle active">ON</button></div>
+      <div class="sign-toggle-row"><span class="debug-copy">Adaptive track calibration</span><button id="lightAutoCalibrate" class="ui-btn sign-toggle active">ON</button></div>
+      <div class="sign-note-strip"><span class="sign-note-dot" id="signNoteDot"></span><span id="signNoteDesc">Light response is calibrated to this song's own signal distribution; manual gains shape the response rather than defining its absolute scale.</span></div>
+      <div class="light-auto-profile" id="lightAutoProfile">Load a song to build the light-response profile.</div>
+    </div>
+    <div class="sign-section">
+      <h4>Primary Layers</h4>
+      <div class="sign-grid">
+        <div class="sign-row"><label>Main floor bias</label><output id="lightMainBaseOut"></output><input id="lightMainBase" type="range" min="-.15" max=".15" step=".01" value="0"></div>
+        <div class="sign-row"><label>Main energy gain</label><output id="lightMainEnergyOut"></output><input id="lightMainEnergy" type="range" min="0" max=".50" step=".01" value=".18"></div>
+        <div class="sign-row"><label>Main bass gain</label><output id="lightMainBassOut"></output><input id="lightMainBass" type="range" min="0" max=".55" step=".01" value=".24"></div>
+        <div class="sign-row"><label>Backlight bass gain</label><output id="lightBackBassOut"></output><input id="lightBackBass" type="range" min="0" max="1.40" step=".01" value="1.00"></div>
+      </div>
+    </div>
+    <div class="sign-section">
+      <h4>Arrows</h4>
+      <div class="sign-grid">
+        <div class="sign-row"><label>Arrow level</label><output id="lightArrowGainOut"></output><input id="lightArrowGain" type="range" min="0" max="1.70" step=".01" value="1.00"></div>
+        <div class="sign-row"><label>Arrow response</label><output id="lightArrowResponseOut"></output><input id="lightArrowResponse" type="range" min=".20" max="1.60" step=".01" value=".70"></div>
+        <div class="sign-row"><label>Arrow contrast</label><output id="lightArrowContrastOut"></output><input id="lightArrowContrast" type="range" min="0" max="1" step=".01" value=".65"></div>
+        <div class="sign-row"><label>Drop impact</label><output id="lightDropGainOut"></output><input id="lightDropGain" type="range" min="0" max="1.80" step=".01" value="1.10"></div>
+      </div>
+    </div>
+    <div class="sign-section">
+      <h4>Accents</h4>
+      <div class="sign-grid">
+        <div class="sign-row"><label>Accent strength</label><output id="lightAccentGainOut"></output><input id="lightAccentGain" type="range" min="0" max="1.60" step=".01" value="1.00"></div>
+        <div class="sign-row"><label>Accent decay</label><output id="lightAccentDecayOut"></output><input id="lightAccentDecay" type="range" min=".35" max="2.50" step=".05" value="1.15"></div>
+        <div class="sign-row"><label>Chaos gain</label><output id="lightAccentChaosOut"></output><input id="lightAccentChaos" type="range" min="0" max="1.60" step=".01" value="1.00"></div>
+        <div class="sign-toggle-row"><span>Dominant note → color</span><button id="lightNoteColor" class="ui-btn sign-toggle active">ON</button></div>
+      </div>
+      <div class="sign-meter-row"><div class="sign-meter-label"><span>Accent activity</span><b id="signAccentMeterText">0.00</b></div><div class="sign-meter"><i id="signAccentMeter"></i></div></div>
+    </div>
+    <div class="sign-section">
+      <h4>Appearance</h4>
+      <div class="sign-preset-row" id="signThemeRow">
+        <button class="ui-btn sign-theme active" data-theme="pink">Pink</button>
+        <button class="ui-btn sign-theme" data-theme="cyan">Cyan</button>
+        <button class="ui-btn sign-theme" data-theme="amber">Amber</button>
+        <button class="ui-btn sign-theme" data-theme="blue">Blue</button>
+        <button class="ui-btn sign-theme" data-theme="auto">Auto</button>
+      </div>
+      <div class="sign-grid" style="margin-top:7px">
+        <div class="sign-row"><label>Glow intensity</label><output id="lightGlowOut"></output><input id="lightGlow" type="range" min="0" max="1.70" step=".01" value="1.00"></div>
+        <div class="sign-row"><label>Wall spread</label><output id="lightWallOut"></output><input id="lightWall" type="range" min=".50" max="1.80" step=".01" value="1.00"></div>
+        <div class="sign-row"><label>Sign brightness</label><output id="lightBrightnessOut"></output><input id="lightBrightness" type="range" min=".60" max="1.20" step=".01" value="1.00"></div>
+        <div class="sign-row"><label>Quiet breath</label><output id="lightQuietOut"></output><input id="lightQuiet" type="range" min="0" max=".025" step=".001" value=".010"></div>
+      </div>
+    </div>
+    <div class="sign-section">
+      <h4>Light Layers</h4>
+      <div class="sign-meter-row"><div class="sign-meter-label"><span>Main</span><b id="slMainText">0.60</b></div><div class="sign-meter"><i id="slMain"></i></div></div>
+      <div class="sign-meter-row"><div class="sign-meter-label"><span>Backlight</span><b id="slBackText">0.02</b></div><div class="sign-meter"><i id="slBack"></i></div></div>
+      <div class="sign-meter-row"><div class="sign-meter-label"><span>Arrows</span><b id="slArrowText">0.05</b></div><div class="sign-meter"><i id="slArrow"></i></div></div>
+      <div class="sign-meter-row"><div class="sign-meter-label"><span>Bass pressure</span><b id="slBassText">0.00</b></div><div class="sign-meter"><i id="slBass"></i></div></div>
+      <div class="sign-meter-row"><div class="sign-meter-label"><span>Drop pulse</span><b id="slDropText">0.00</b></div><div class="sign-meter"><i id="slDrop"></i></div></div>
+    </div>
+    <div class="sign-section">
+      <h4>Presets</h4>
+      <div class="sign-preset-row">
+        <button class="ui-btn sign-preset" data-preset="neon">Neon</button>
+        <button class="ui-btn sign-preset" data-preset="soft">Soft</button>
+        <button class="ui-btn sign-preset" data-preset="energetic">Energetic</button>
+        <button class="ui-btn sign-preset" data-preset="minimal">Minimal</button>
+      </div>
+      <div class="debug-copy" style="margin-top:7px">Geometry never moves. Only face intensity, face color and glow/backlight change.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+          <div class="section-title-row"><h3>Export</h3></div>
+          <div class="export-actions"><button id="jsonBtn" class="ui-btn">JSON</button><button id="csvBtn" class="ui-btn">CSV</button><button id="eventsCsvBtn" class="ui-btn">Events</button></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+</div>
+<audio id="audio" crossorigin="anonymous"></audio>
+
+<script src="js/core.js"></script>
+<script src="js/config.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/analysis.js"></script>
+<script src="js/postprocess.js"></script>
+<script src="js/controls.js"></script>
+<script src="js/export.js"></script>
+<script src="js/feature-panels.js"></script>
+<script src="js/draw-tracks.js"></script>
+<script src="js/light-preview.js"></script>
+<script src="js/timeline.js"></script>
+<script src="js/inspector.js"></script>
+<script src="js/sign.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
